@@ -1,0 +1,17 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+OMPI=/usr/lib64/openmpi
+
+PATH=$PATH:$HOME/.local/bin:$HOME/bin:$OMPI/bin
+export PATH
+
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$OMPI/lib
+export LD_LIBRARY_PATH

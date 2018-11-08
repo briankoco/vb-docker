@@ -1,0 +1,19 @@
+FROM centos:centos7
+MAINTAINER Brian Kocoloski <brian.kocoloski@wustl.edu>
+
+ENV USER cc
+ENV HOME /home/${USER}
+
+RUN yum -y update && \
+    yum -y install openmpi openmpi-devel make numactl-devel \
+                   libnuma-devel hwloc-devel && \
+    yum clean all && \
+    rm -rf /var/cache/yum
+
+# compile varbench
+RUN mkdir /varbench
+ADD generated-files/varbench /varbench
+
+ENV PATH=$PATH:/usr/lib64/openmpi/bin
+
+RUN cd /varbench && make OPERATING_SYSTEM=default
