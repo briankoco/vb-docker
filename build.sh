@@ -12,7 +12,7 @@ mkdir -p $vb_path
 
 docker build --rm -t docker-vb-build -f Dockerfile.build -m 4g .
 if [ $? -ne 0 ] ; then
-    echo "Failed to build docker-fb-build container"
+    echo "Failed to build docker-vb-build container"
     exit 2
 fi
 
