@@ -9,8 +9,9 @@ seed=$1
 mode=$2
 procs=$3
 
-#RESULTS_DIR=/ssd-data/
-RESULTS_DIR=`pwd`
+RESULTS_DIR=${HOME}/results
+out_dir=${RESULTS_DIR}/${mode}/${seed}
+
 outfile=mpirun.out
 errfile=mpirun.err
 
@@ -18,14 +19,10 @@ errfile=mpirun.err
 hosts=`awk '{print $1}' ~/hostfile`
 cur_dir=`pwd`
 for h in ${hosts[@]}; do
-    echo "Clearing work-dir on container $h"
-    ssh $h "rm -rf $cur_dir/work-dir; mkdir -p $cur_dir/work-dir;"
+    echo "Setting up container $h"
+    ssh $h "sudo rm -rf $cur_dir/work-dir; mkdir -p $cur_dir/work-dir;"
+    ssh $h "mkdir -p $out_dir && rm -f ${out_dir}/*"
 done
-
-# Setup results directory
-out_dir=${RESULTS_DIR}/${mode}/${seed}
-mkdir -p $out_dir
-rm -f ${out_dir}/* 
 
 pushd work-dir
 
@@ -36,7 +33,7 @@ pushd work-dir
     -p n -m n \
     -k operating_system \
     ~/libsyzcorpus.json \
-    $mode f 1000 0 0 $out_dir $seed \
+    $mode f 100 0 1 $out_dir $seed \
     2> $errfile \
     1> $outfile
 

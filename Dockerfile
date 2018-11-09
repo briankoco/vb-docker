@@ -8,7 +8,7 @@ ENV SSH_DIR ${HOME}/.ssh
 RUN yum -y update && \
     yum -y install openssh-server openssh-clients \
            openmpi openmpi-devel \
-           chrpath which python2 && \
+           chrpath which python2 sudo && \
     yum clean all && rm -rf /var/cache/yum
 
 
@@ -18,6 +18,8 @@ RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
 
 # User creation
 RUN useradd ${USER}
+RUN usermod -aG wheel ${USER}
+RUN echo '%wheel ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # ssh key for openmpi
 COPY ssh-keys/id_rsa.vb ${HOME}/.ssh/id_rsa

@@ -20,5 +20,5 @@ if __name__ == "__main__":
 
     for job in to_run:
         print "Running job %d sequentially" % job
-        cmd = "./run-os.sh %d r %d" % (job, nr_procs)
+        cmd = "./run-os.sh %d s %d" % (job, nr_procs)
         os.system(cmd)

@@ -1,13 +1,14 @@
 #!/bin/bash
 
 
-if [ $# -lt 2 ]; then
-    echo "Usage: "$0" <nr containers> <nr cores total>"
+if [ $# -lt 3 ]; then
+    echo "Usage: "$0" <nr containers> <nr cores total> <results dir>"
     exit 2
 fi
 
 nr_containers=$1
 nr_cores_total=$2
+results_dir=$3
 
 if [ $(($nr_cores_total % $nr_containers)) -ne 0 ]; then
     echo "Number of containers must be a factor of number of cores"
@@ -20,8 +21,8 @@ NODE1_CPUS="1,33,9,41,17,49,25,57,5,37,13,45,21,53,29,61"
 NODE2_CPUS="2,34,10,42,18,50,26,58,6,38,14,46,22,54,30,62"
 NODE3_CPUS="3,35,11,43,19,51,27,59,7,39,15,47,23,55,31,63"
 
-
 rm -f hostfile
+
 for i in $(seq 1 $nr_containers); do
     val=$((10 + $i)) 
     ip=172.20.0.$val
@@ -37,14 +38,15 @@ for i in $(seq 1 $nr_containers); do
 #        DOCKER_OPTS=""
 #    fi
 
-#    echo $DOCKER_OPTS
-    DOCKER_OPTS="--cpus $nr_cores_per_container"
+    DOCKER_OPTS="--cpus $(( $nr_cores_per_container - 1 ))"
 
     docker run --net vb-net --ip $ip --name=docker-vb-$i \
         $DOCKER_OPTS \
         -d docker-vb
 
+    # -v /home/cc/results:${results_dir}
     #-v /ssd-sdb/briankoco:/ssd-data/ 
+    echo $DOCKER_OPTS
 
     echo "$ip slots=$nr_cores_per_container max-slots=$nr_cores_per_container" >> hostfile
 done

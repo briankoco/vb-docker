@@ -7,7 +7,9 @@ pushd generated-files
 if [ ! -d varbench ]; then 
     git clone https://github.com/briankoco/varbench.git
 else
+    pushd varbench
     git pull
+    popd
 fi
 popd
 
