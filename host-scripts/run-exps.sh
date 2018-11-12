@@ -20,7 +20,7 @@ for container in ${containers[@]}; do
     # Boot this
     results_dir="$(pwd)/../results/${container}containers-${core}cores"
     mkdir -p $results_dir
-    rm -f ${results_dir}/*
+    rm -rf ${results_dir}/*
     ./start-cluster.sh $container $total_cores $results_dir
 
     # Give it 10 seconds to come up
